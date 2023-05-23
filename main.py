@@ -1,4 +1,6 @@
 import sys
+import networkx as nx
+import matplotlib.pyplot as plt
 
 # Função para encontrar o vértice com a distância mínima entre os vértices ainda não visitados
 def encontrar_vertice_minimo(distancias, visitados):
@@ -54,6 +56,27 @@ def dijkstra(grafo, vertice_inicial):
             imprimir_caminho(caminho, i)
             print()
 
+    # Criar o grafo utilizando a biblioteca networkx
+    G = nx.Graph()
+    for i in range(num_vertices):
+        for j in range(num_vertices):
+            if grafo[i][j] > 0:
+                G.add_edge(i, j, weight=grafo[i][j])
+
+    # Definir a posição dos vértices no gráfico
+    pos = nx.spring_layout(G)
+
+    # Definir as cores dos vértices e arestas
+    node_colors = ['blue' if i == vertice_inicial else 'red' for i in range(num_vertices)]
+    edge_colors = ['black' for _ in G.edges()]
+
+    # Plotar o gráfico
+    nx.draw(G, pos, with_labels=True, node_color=node_colors, edge_color=edge_colors, node_size=800)
+    labels = nx.get_edge_attributes(G, 'weight')
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+
+    plt.show()
+
 # Matriz de adjacência do grafo fornecido na imagem
 grafo = [
             [0, 5, 7, 1, 0, 0, 0],
@@ -63,7 +86,7 @@ grafo = [
             [0, 0, 5, 0, 0, 4, 1],
             [0, 0, 1, 5, 4, 0, 0],
             [0, 0, 0, 3, 1, 0, 0]
-        ]
+]
 
 vertice_inicial = 0  # Escolha o vértice inicial aqui
 
